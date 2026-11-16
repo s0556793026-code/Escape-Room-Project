@@ -5,7 +5,7 @@ def main_menu():
 --------------------------
 
 1. Management rooms
-2. Search room details
+2. Management orders
 3. Add new room
 4. Update room details
 5. Activate or deactivate room

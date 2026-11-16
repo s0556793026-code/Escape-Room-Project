@@ -96,8 +96,9 @@ def update_order():
         elif choice != '4':
             print("Choice must be 1-4")
 
-def cancellation_fees(start_time, total_price):
-    diff = datetime.time.strptime(start_time, '%H:%M') - datetime.datetime.now()
+def cancellation_fees(start_time, booking_date, total_price):
+    date = f"{booking_date} {start_time}"
+    diff = datetime.datetime.strptime(date, '%Y-%m-%d %H:%M' ) - datetime.datetime.now()
     if diff < datetime.timedelta(hours=6):
         return total_price / 2
     
@@ -105,7 +106,7 @@ def cancellation_fees(start_time, total_price):
         return total_price / 4
 
     else:
-        return total_price
+        return 0.0
 
 
 def cancel_order():
@@ -115,7 +116,7 @@ def cancel_order():
         if order["booking_id"] == f"B{booking_id.zfill(3)}":
             if order["status"] == "Active":
                 order["status"] = "Cancelled"
-                order["cancellation_fee"] = cancellation_fees(order["start_time"], order["total_price"])
+                order["cancellation_fee"] = cancellation_fees(order["start_time"],order["booking_date"], order["total_price"])
                 print("Order successfully cancelled")
             else:
                 print("The order has already been cancelled.")
@@ -124,7 +125,6 @@ def cancel_order():
 
 def orders_management():
     choice = ''
-
     while choice != '8':
         show_order_menu()
         choice = get_and_validate("Choose an option: ",is_digit)
@@ -160,4 +160,5 @@ def orders_management():
 
         elif choice != '8':
             print("Choice must be 1-8")
-orders_management()
+
+

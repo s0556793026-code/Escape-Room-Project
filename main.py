@@ -18,5 +18,6 @@ def main():
         elif choice != '6':
             print("Choice must be 1-6")
 
+
 if __name__ == "__main__":
     main()

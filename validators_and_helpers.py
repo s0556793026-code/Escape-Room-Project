@@ -90,7 +90,7 @@ def is_room_exist_and_activite(room_id):
 
 def is_valid_date(date_first):
     try:
-        if datetime.datetime.today() < datetime.datetime.strptime(date_first, '%Y-%m-%d'):
+        if datetime.date.today() <= datetime.date.strptime(date_first, '%Y-%m-%d'):
             return True
         print("Date has already passed. Try again")
         return False
