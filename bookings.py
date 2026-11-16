@@ -4,14 +4,13 @@ from validators_and_helpers import  search_order_by_date ,search_order_by_custom
 from manage_data import load_data, read_and_update_data
 import datetime
 
-
 def add_time():
     return time
 
 def add_players(room):
     
     players = 100
-    max_players = room[0]["max_players"]
+    max_players = room["max_players"]
     while players > max_players:
         choice = get_and_validate("Enter number of participants: ", is_digit)
         players = int(choice)
@@ -29,7 +28,7 @@ def weekend_discount(price, date):
     return price
 
 def total_price(room, players, date):
-    price_per_player = room[0]["price_per_player"]
+    price_per_player = room["price_per_player"]
     price = players * price_per_player
     if players >= 5:
         price = group_discount(price, 10)
@@ -38,25 +37,51 @@ def total_price(room, players, date):
     
     price = weekend_discount(price, date)
 
-    return round(price, 2)
+    return (float(price))
 
+def get_new_booking_id():
+    booking_id = max(int(room["booking_id"][1:]) for room in load_data("bookings.json")) + 1
 
+    return f"B{str(booking_id).zfill(3)}"
 
+def get_order_by_room_id(room_id, booking_data):
+    return [order for order in load_data("bookings.json") if order["room_id"] == f"R{room_id.zfill(3)}" and order["booking_date"] == booking_data]
+
+def get_start_time(booking_date, room_id):
+    room = search_room_by_id(room_id, load_data("rooms.json"))[0]
+    orders = get_order_by_room_id(room_id, booking_date)
+
+    while True:
+        start_time = get_and_validate("Enter time in format 00:00: ", is_valid_time)
+        new_start_time = datetime.datetime.strptime(f"{booking_date} {start_time}", '%Y-%m-%d %H:%M')
+        new_end_time = new_start_time + datetime.timedelta(minutes=room["duration"] + 15)
+
+        is_taken = False
+
+        for order in orders:
+            time_order = datetime.datetime.strptime(f"{order["booking_date"]} {order["start_time"]}", '%Y-%m-%d %H:%M')
+            end_time_order = time_order + datetime.timedelta(minutes=room["duration"] + 15)
+            if new_start_time < end_time_order and time_order < new_end_time:
+                print("This time is already taken.")
+                is_taken = True
+                break
+        
+        if not is_taken:
+            return start_time
 
 def add_order():
-    booking_id = max(int(room["booking_id"][1:]) for room in load_data("bookings.json")) + 1
     customer_name = get_and_validate("Enter your name: ", is_not_empty)
     room_id = get_and_validate("Enter room id: ", is_room_exist_and_activite)
-    room  = search_room_by_id(room_id, load_data("rooms.json"))
+    room  = search_room_by_id(room_id, load_data("rooms.json"))[0]
     booking_date = get_and_validate("Enter the date in format Y-m-d: ", is_valid_date)
-    start_time = get_and_validate("Enter time in format 00:00: ", is_valid_time)
+    start_time = get_start_time(booking_date, room_id)
     players = add_players(room)
     price = total_price(room, players, booking_date)
 
     return {
-        "booking_id": f"B{str(booking_id).zfill(3)}",
+        "booking_id": get_new_booking_id(),
         "customer_name": customer_name,
-        "room_id": room[0]["room_id"],
+        "room_id": room["room_id"],
         "booking_date": booking_date,
         "start_time": start_time,
         "players": players,
@@ -78,6 +103,7 @@ def update(booking_id, value, parameter):
 
 def update_order():
     booking_id = get_and_validate("Enter order id: ", is_order_exist)
+    order = search_order_by_id(booking_id, "bookings.json")[0]
     choice = ''
     while choice != '4':
         update_order_menu()
@@ -86,7 +112,7 @@ def update_order():
             booking_date = get_and_validate("Enter the date in format Y-m-d: ", is_valid_date)
             update(booking_id, booking_date, "booking_date")
         elif choice == '2':
-            start_time = get_and_validate("Enter time in format 00:00: ", is_valid_time)
+            start_time = get_start_time(order["booking_date"], order["room_id"][1:])
             update(booking_id, start_time, "start_time")
         elif choice == '3':
             room_id = search_order_by_id(booking_id, load_data("bookings.json"))[0]["room_id"][-1]
@@ -160,5 +186,3 @@ def orders_management():
 
         elif choice != '8':
             print("Choice must be 1-8")
-
-

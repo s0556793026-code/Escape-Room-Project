@@ -6,10 +6,8 @@ def main_menu():
 
 1. Management rooms
 2. Management orders
-3. Add new room
-4. Update room details
-5. Activate or deactivate room
-6. Exit
+3. Management Reports and Data
+4. Exit
        
     """
     )
@@ -57,13 +55,13 @@ def show_reports_menu():
     REPORTS MANAGEMENT
 --------------------------
 
-1. Total active orders
-2. Total cancelled orders
-3. Total revenue from active orders
-4. Total cancellation fees from cancelled bookings
-5. The most popular room
-6. Number of bookings per room
-7. The occupancy rate of a specific room on a given date
+1. Display total active orders
+2. Display total cancelled orders
+3. Display total revenue from active orders
+4. Display total cancellation fees from cancelled bookings
+5. Display the most popular room
+6. Display number of bookings per room
+7. Display occupancy rate of a specific room on a given date
 8. Back to Main Menu
     """
     )

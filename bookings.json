@@ -113,10 +113,21 @@
     "booking_id": "B011",
     "customer_name": "Avi",
     "room_id": "R001",
-    "booking_date": "2026-11-17",
+    "booking_date": "2026-11-22",
     "start_time": "10:00",
     "players": 6,
     "total_price": 432.0,
+    "status": "Active",
+    "cancellation_fee": 0.0
+  },
+  {
+    "booking_id": "B012",
+    "customer_name": "Avi",
+    "room_id": "R002",
+    "booking_date": "2026-11-16",
+    "start_time": "19:15",
+    "players": 2,
+    "total_price": 55,
     "status": "Active",
     "cancellation_fee": 0.0
   }

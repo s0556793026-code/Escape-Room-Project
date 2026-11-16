@@ -70,6 +70,9 @@ def search_order_by_customer_name(customer_name, data):
 def search_order_by_date(booking_date, data):
     return [order for order in data if order["booking_date"] == booking_date]
 
+
+
+
 def is_bool(choice):
     if choice  == '1':
         return True
@@ -107,4 +110,3 @@ def is_valid_time(time_add):
     except Exception as e:
         print(e)
         return False
-    

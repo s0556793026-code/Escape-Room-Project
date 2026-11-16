@@ -43,7 +43,7 @@ def add_room():
     room_id = max(int(room["room_id"][1:]) for room in load_data("rooms.json")) + 1
 
     return {
-        "room_id": f"R{room_id.zfile(3)}",
+        "room_id": f"R{str(room_id).zfill(3)}",
         "name": name,
         "difficulty": difficulty,
         "duration": int(duration),
